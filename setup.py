@@ -23,6 +23,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
+            'papika-to-slack = papika.cli:to_slack',
         ],
     },
 )

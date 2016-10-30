@@ -1,0 +1,32 @@
+[slack]
+api_token = "REPLACE-ME"
+
+[kafka]
+bootstrap_servers = [
+    "kafka1.internal:9092",
+    "kafka2.internal:9092",
+]
+
+[kafka.to_slack]
+topic = 'papika_to_slack'
+group_id = 'papika-to-slack-test-group'
+
+[kafka.from_slack]
+topic = 'papika_from_slack'
+
+[logging]
+version = 1
+disable_existing_loggers = false
+
+[logging.formatters.verbose]
+format = "%(levelname)s %(asctime)s %(module)s [%(process)d] %(message)s"
+
+[logging.handlers.console]
+level = "INFO"
+class = "logging.StreamHandler"
+formatter = "verbose"
+
+[logging.loggers.papika]
+handlers = ["console"]
+level = "INFO"
+
