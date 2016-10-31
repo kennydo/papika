@@ -47,6 +47,7 @@ class BridgeToSlack(Bridge):
             log.info("Successfully authenticated with Slack: {0}".format(auth_test))
         else:
             log.error("Could not authenticate to Slack: {0}".format(auth_test))
+            raise ValueError("Invalid Slack token")
 
         for event in self.kafka_consumer:
             try:

@@ -24,6 +24,7 @@ setup(
     entry_points={
         'console_scripts': [
             'papika-to-slack = papika.cli:to_slack',
+            'papika-from-slack = papika.cli:from_slack',
         ],
     },
 )
