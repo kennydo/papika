@@ -54,8 +54,12 @@ class BridgeFromSlack(Bridge):
         for event in yield_events_from_slack_client(self.slack_client):
             log.debug("Received Slack event: {0}".format(event))
 
-            value = json.dumps(event)
-            value = value.encode('utf-8')
+            value = {
+                'timestamp': time.time(),
+                'event': event,
+            }
+
+            value = json.dumps(value).encode('utf-8')
 
             log.info("Sending to Kafka: {0}".format(value))
 
