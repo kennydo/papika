@@ -41,9 +41,6 @@ class BridgeToSlack(Bridge):
             group_id=config['kafka']['to_slack']['group_id'],
         )
 
-        # We don't care about message that tried to be sent while this bridge was not able to forward them to Slack.
-        self.kafka_consumer.seek_to_end()
-
     def run(self) -> None:
         auth_test = self.slack_client.api_call('auth.test')
         if auth_test['ok']:
