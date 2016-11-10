@@ -74,6 +74,7 @@ class BridgeToSlack(Bridge):
                 text=message['text'],
                 parse=message.get('parse', 'none'),
                 link_names=message.get('link_names', '1'),
+                attachments=message.get('attachments'),
                 unfurl_links=message.get('unfurl_links', 'false'),
                 unfurl_media=message.get('unfurl_media', 'true'),
                 username=message.get('username', ''),
