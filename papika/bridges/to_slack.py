@@ -15,16 +15,15 @@ log = logging.getLogger(__name__)
 
 
 def is_valid_message(message: Dict[str, Any]) -> bool:
-    required_arguments = [
-        'channel',
-        'text',
-    ]
     is_valid = True
 
-    for arg in required_arguments:
-        if arg not in message:
-            log.error("Required argument {0} was missing in message: {1}".format(arg, message))
-            is_valid = False
+    if 'channel' not in message:
+        log.error("Required argument 'channel' was missing in message: {0}".format(message))
+        is_valid = False
+
+    if 'text' not in message and 'attachments' not in message:
+        log.error("One of either 'text' or 'attachments' must be supplied in message: {0}".format(message))
+        is_valid = False
 
     return is_valid
 
@@ -68,7 +67,6 @@ class BridgeToSlack(Bridge):
 
             message_as_kwargs = dict(
                 channel=message['channel'],
-                text=message['text'],
                 parse=message.get('parse', 'none'),
                 link_names=message.get('link_names', '1'),
                 attachments=message.get('attachments'),
@@ -79,6 +77,10 @@ class BridgeToSlack(Bridge):
                 icon_url=message.get('icon_url'),
                 icon_emoji=message.get('icon_emoji'),
             )
+
+            if 'text' in message:
+                message_as_kwargs['text'] = message['text']
+
             log.info("Sending message: {0}".format(message_as_kwargs))
 
             self.slack_client.api_call(
