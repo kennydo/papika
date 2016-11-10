@@ -6,7 +6,7 @@ from setuptools import (
 
 setup(
     name='papika',
-    version='0.0.1',
+    version='0.0.2',
     description="Emit and receive Slack messages over Kafka",
     url='https://github.com/kennydo/papika',
     author='Kenny Do',
