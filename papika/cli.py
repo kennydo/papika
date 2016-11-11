@@ -1,3 +1,4 @@
+import asyncio
 import click
 
 import papika.config
@@ -18,4 +19,6 @@ def to_slack():
     config = papika.config.load_from_env_var_path()
 
     bridge = BridgeToSlack(config)
-    bridge.run()
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(bridge.run())

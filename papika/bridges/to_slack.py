@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 from typing import (
@@ -40,13 +41,21 @@ class BridgeToSlack(Bridge):
             group_id=config['kafka']['to_slack']['group_id'],
         )
 
-    def run(self) -> None:
+    def send_slack_message(self, message: Dict[str, Any]) -> None:
+        return self.slack_client.api_call(
+            'chat.postMessage',
+            **message,
+        )
+
+    async def run(self) -> None:
         auth_test = self.slack_client.api_call('auth.test')
         if auth_test['ok']:
             log.info("Successfully authenticated with Slack: {0}".format(auth_test))
         else:
             log.error("Could not authenticate to Slack: {0}".format(auth_test))
             raise ValueError("Invalid Slack token")
+
+        loop = asyncio.get_event_loop()
 
         for event in self.kafka_consumer:
             try:
@@ -83,7 +92,4 @@ class BridgeToSlack(Bridge):
 
             log.info("Sending message: {0}".format(message_as_kwargs))
 
-            self.slack_client.api_call(
-                'chat.postMessage',
-                **message_as_kwargs,
-            )
+            loop.run_in_executor(None, self.send_slack_message, message_as_kwargs)
