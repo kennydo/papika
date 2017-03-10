@@ -31,8 +31,6 @@ def yield_events_from_slack_client(sc: slackclient.SlackClient) -> Iterable[Dict
             if event.get('type') not in SLACK_EVENT_TYPE_BLACKLIST:
                 yield event
 
-        time.sleep(1)
-
 
 class BridgeFromSlack(Bridge):
     def __init__(self, config: Dict[str, Any]) -> None:
