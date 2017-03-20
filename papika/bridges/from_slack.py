@@ -8,10 +8,9 @@ from typing import (
 )
 
 import kafka
-import slackclient
 
 from papika.bridges import Bridge
-
+from papika.slack import BlockingSlackClient
 
 log = logging.getLogger(__name__)
 
@@ -24,20 +23,18 @@ SLACK_EVENT_TYPE_BLACKLIST = set([
 ])
 
 
-def yield_events_from_slack_client(sc: slackclient.SlackClient) -> Iterable[Dict[str, Any]]:
+def yield_events_from_slack_client(sc: BlockingSlackClient) -> Iterable[Dict[str, Any]]:
     while True:
         events = sc.rtm_read()
         for event in events:
             if event.get('type') not in SLACK_EVENT_TYPE_BLACKLIST:
                 yield event
 
-        time.sleep(1)
-
 
 class BridgeFromSlack(Bridge):
     def __init__(self, config: Dict[str, Any]) -> None:
         token = config['slack']['api_token']
-        self.slack_client = slackclient.SlackClient(token)
+        self.slack_client = BlockingSlackClient(token)
 
         self.destination_kafka_topic = config['kafka']['from_slack']['topic']
         self.kafka_producer = kafka.KafkaProducer(
