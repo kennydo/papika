@@ -83,7 +83,10 @@ class BridgeToSlack(Bridge):
 
             log.info("Sending message: {0}".format(message_as_kwargs))
 
-            self.slack_client.api_call(
-                'chat.postMessage',
-                **message_as_kwargs,
-            )
+            try:
+                self.slack_client.api_call(
+                    'chat.postMessage',
+                    **message_as_kwargs,
+                )
+            except:
+                log.exception("Unable to send message: %s", message)
